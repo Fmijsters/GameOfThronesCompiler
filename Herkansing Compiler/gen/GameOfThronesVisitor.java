@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -5,9 +7,11 @@ import java.util.Map;
 public class GameOfThronesVisitor extends GameOfThronesLangBaseVisitor<ArrayList<String>> {
 
     private Map<String, Integer> storage;
+    private PrintWriter printWriter;
 
-    public GameOfThronesVisitor() {
+    public GameOfThronesVisitor(PrintWriter printWriter) {
         storage = new HashMap<String, Integer>();
+        this.printWriter = printWriter;
     }
 
     @Override
@@ -28,6 +32,23 @@ public class GameOfThronesVisitor extends GameOfThronesLangBaseVisitor<ArrayList
             code.add("isub");
         }
         return code;
+    }
+
+    @Override
+    public ArrayList<String> visitSimple_expression(GameOfThronesLangParser.Simple_expressionContext ctx) {
+        ArrayList<String> code = super.visit(ctx.expr());
+        for (String string: code){
+            printWriter.println(string);
+        }
+        return code;
+    }
+
+    @Override
+    public ArrayList<String> visitPrintExpr(GameOfThronesLangParser.PrintExprContext ctx) {
+        Object value = super.visit(ctx.expr());
+        printWriter.println("ldc "+ value);
+        printWriter.println("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
+        return super.visitPrintExpr(ctx);
     }
 
     //    @Override

@@ -3,18 +3,19 @@ grammar GameOfThronesLang;
 winteriscoming: statement* EOF;
 
 something_for_the_maesters:
-            PRINT expr SEMICOLON                              # printExpr
-            |   IDENTIFIER '=' expr SEMICOLON               # assign;
+            PRINT expr SEMICOLON                                # printExpr
+            | expr SEMICOLON                                # simple_expression
+            |   IDENTIFIER '=' expr SEMICOLON                   # assign;
 
-expr:   expr op=('*'|'/') expr      # MulDiv
-    |   expr op=('+'|'-') expr      # AddSub
+expr:   expr op=('*'|'/') expr                                  # MulDiv
+    |   leftExpr=expr op=('+'|'-') rightExpr=expr               # AddSub
     |   INT                         # int
     |   IDENTIFIER                  # identifier
     |   OPEN_P expr CLOSE_P         # parens
     ;
 
 
-statement: something_for_the_maesters;
+statement: something_for_the_maesters | expr;
 
 
 MUL :   '*' ;

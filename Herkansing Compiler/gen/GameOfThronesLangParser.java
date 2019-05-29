@@ -1,4 +1,4 @@
-// Generated from C:/Users/fmijs/Desktop/Herkansing Compiler\GameOfThronesLang.g4 by ANTLR 4.7.2
+// Generated from C:/Users/fmijs/Desktop/GameOfThronesCompiler/Herkansing Compiler\GameOfThronesLang.g4 by ANTLR 4.7.2
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -120,7 +120,7 @@ public class GameOfThronesLangParser extends Parser {
 			setState(11);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==PRINT || _la==IDENTIFIER) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << OPEN_P) | (1L << PRINT) | (1L << IDENTIFIER) | (1L << INT))) != 0)) {
 				{
 				{
 				setState(8);
@@ -157,6 +157,18 @@ public class GameOfThronesLangParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
+	public static class Simple_expressionContext extends Something_for_the_maestersContext {
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode SEMICOLON() { return getToken(GameOfThronesLangParser.SEMICOLON, 0); }
+		public Simple_expressionContext(Something_for_the_maestersContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GameOfThronesLangVisitor ) return ((GameOfThronesLangVisitor<? extends T>)visitor).visitSimple_expression(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 	public static class PrintExprContext extends Something_for_the_maestersContext {
 		public TerminalNode PRINT() { return getToken(GameOfThronesLangParser.PRINT, 0); }
 		public ExprContext expr() {
@@ -189,10 +201,10 @@ public class GameOfThronesLangParser extends Parser {
 		Something_for_the_maestersContext _localctx = new Something_for_the_maestersContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_something_for_the_maesters);
 		try {
-			setState(25);
+			setState(28);
 			_errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case PRINT:
+			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
+			case 1:
 				_localctx = new PrintExprContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
@@ -204,22 +216,30 @@ public class GameOfThronesLangParser extends Parser {
 				match(SEMICOLON);
 				}
 				break;
-			case IDENTIFIER:
-				_localctx = new AssignContext(_localctx);
+			case 2:
+				_localctx = new Simple_expressionContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(20);
-				match(IDENTIFIER);
-				setState(21);
-				match(EQUALS);
-				setState(22);
 				expr(0);
-				setState(23);
+				setState(21);
 				match(SEMICOLON);
 				}
 				break;
-			default:
-				throw new NoViableAltException(this);
+			case 3:
+				_localctx = new AssignContext(_localctx);
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(23);
+				match(IDENTIFIER);
+				setState(24);
+				match(EQUALS);
+				setState(25);
+				expr(0);
+				setState(26);
+				match(SEMICOLON);
+				}
+				break;
 			}
 		}
 		catch (RecognitionException re) {
@@ -284,7 +304,9 @@ public class GameOfThronesLangParser extends Parser {
 		}
 	}
 	public static class AddSubContext extends ExprContext {
+		public ExprContext leftExpr;
 		public Token op;
+		public ExprContext rightExpr;
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
@@ -326,7 +348,7 @@ public class GameOfThronesLangParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(34);
+			setState(37);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case INT:
@@ -335,7 +357,7 @@ public class GameOfThronesLangParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(28);
+				setState(31);
 				match(INT);
 				}
 				break;
@@ -344,7 +366,7 @@ public class GameOfThronesLangParser extends Parser {
 				_localctx = new IdentifierContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(29);
+				setState(32);
 				match(IDENTIFIER);
 				}
 				break;
@@ -353,11 +375,11 @@ public class GameOfThronesLangParser extends Parser {
 				_localctx = new ParensContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(30);
+				setState(33);
 				match(OPEN_P);
-				setState(31);
+				setState(34);
 				expr(0);
-				setState(32);
+				setState(35);
 				match(CLOSE_P);
 				}
 				break;
@@ -365,7 +387,7 @@ public class GameOfThronesLangParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(44);
+			setState(47);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -373,16 +395,16 @@ public class GameOfThronesLangParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(42);
+					setState(45);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 					case 1:
 						{
 						_localctx = new MulDivContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(36);
+						setState(39);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
-						setState(37);
+						setState(40);
 						((MulDivContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==MUL || _la==DIV) ) {
@@ -393,17 +415,18 @@ public class GameOfThronesLangParser extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(38);
+						setState(41);
 						expr(6);
 						}
 						break;
 					case 2:
 						{
 						_localctx = new AddSubContext(new ExprContext(_parentctx, _parentState));
+						((AddSubContext)_localctx).leftExpr = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(39);
+						setState(42);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(40);
+						setState(43);
 						((AddSubContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==ADD || _la==SUB) ) {
@@ -414,14 +437,14 @@ public class GameOfThronesLangParser extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(41);
-						expr(5);
+						setState(44);
+						((AddSubContext)_localctx).rightExpr = expr(5);
 						}
 						break;
 					}
 					} 
 				}
-				setState(46);
+				setState(49);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			}
@@ -442,6 +465,9 @@ public class GameOfThronesLangParser extends Parser {
 		public Something_for_the_maestersContext something_for_the_maesters() {
 			return getRuleContext(Something_for_the_maestersContext.class,0);
 		}
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
 		public StatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -457,10 +483,23 @@ public class GameOfThronesLangParser extends Parser {
 		StatementContext _localctx = new StatementContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_statement);
 		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(47);
-			something_for_the_maesters();
+			setState(52);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
+			case 1:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(50);
+				something_for_the_maesters();
+				}
+				break;
+			case 2:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(51);
+				expr(0);
+				}
+				break;
 			}
 		}
 		catch (RecognitionException re) {
@@ -492,20 +531,22 @@ public class GameOfThronesLangParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\16\64\4\2\t\2\4\3"+
-		"\t\3\4\4\t\4\4\5\t\5\3\2\7\2\f\n\2\f\2\16\2\17\13\2\3\2\3\2\3\3\3\3\3"+
-		"\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3\34\n\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4"+
-		"%\n\4\3\4\3\4\3\4\3\4\3\4\3\4\7\4-\n\4\f\4\16\4\60\13\4\3\5\3\5\3\5\2"+
-		"\3\6\6\2\4\6\b\2\4\3\2\3\4\3\2\5\6\2\65\2\r\3\2\2\2\4\33\3\2\2\2\6$\3"+
-		"\2\2\2\b\61\3\2\2\2\n\f\5\b\5\2\13\n\3\2\2\2\f\17\3\2\2\2\r\13\3\2\2\2"+
-		"\r\16\3\2\2\2\16\20\3\2\2\2\17\r\3\2\2\2\20\21\7\2\2\3\21\3\3\2\2\2\22"+
-		"\23\7\t\2\2\23\24\5\6\4\2\24\25\7\13\2\2\25\34\3\2\2\2\26\27\7\f\2\2\27"+
-		"\30\7\n\2\2\30\31\5\6\4\2\31\32\7\13\2\2\32\34\3\2\2\2\33\22\3\2\2\2\33"+
-		"\26\3\2\2\2\34\5\3\2\2\2\35\36\b\4\1\2\36%\7\r\2\2\37%\7\f\2\2 !\7\7\2"+
-		"\2!\"\5\6\4\2\"#\7\b\2\2#%\3\2\2\2$\35\3\2\2\2$\37\3\2\2\2$ \3\2\2\2%"+
-		".\3\2\2\2&\'\f\7\2\2\'(\t\2\2\2(-\5\6\4\b)*\f\6\2\2*+\t\3\2\2+-\5\6\4"+
-		"\7,&\3\2\2\2,)\3\2\2\2-\60\3\2\2\2.,\3\2\2\2./\3\2\2\2/\7\3\2\2\2\60."+
-		"\3\2\2\2\61\62\5\4\3\2\62\t\3\2\2\2\7\r\33$,.";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\169\4\2\t\2\4\3\t"+
+		"\3\4\4\t\4\4\5\t\5\3\2\7\2\f\n\2\f\2\16\2\17\13\2\3\2\3\2\3\3\3\3\3\3"+
+		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3\37\n\3\3\4\3\4\3\4\3\4\3\4\3"+
+		"\4\3\4\5\4(\n\4\3\4\3\4\3\4\3\4\3\4\3\4\7\4\60\n\4\f\4\16\4\63\13\4\3"+
+		"\5\3\5\5\5\67\n\5\3\5\2\3\6\6\2\4\6\b\2\4\3\2\3\4\3\2\5\6\2<\2\r\3\2\2"+
+		"\2\4\36\3\2\2\2\6\'\3\2\2\2\b\66\3\2\2\2\n\f\5\b\5\2\13\n\3\2\2\2\f\17"+
+		"\3\2\2\2\r\13\3\2\2\2\r\16\3\2\2\2\16\20\3\2\2\2\17\r\3\2\2\2\20\21\7"+
+		"\2\2\3\21\3\3\2\2\2\22\23\7\t\2\2\23\24\5\6\4\2\24\25\7\13\2\2\25\37\3"+
+		"\2\2\2\26\27\5\6\4\2\27\30\7\13\2\2\30\37\3\2\2\2\31\32\7\f\2\2\32\33"+
+		"\7\n\2\2\33\34\5\6\4\2\34\35\7\13\2\2\35\37\3\2\2\2\36\22\3\2\2\2\36\26"+
+		"\3\2\2\2\36\31\3\2\2\2\37\5\3\2\2\2 !\b\4\1\2!(\7\r\2\2\"(\7\f\2\2#$\7"+
+		"\7\2\2$%\5\6\4\2%&\7\b\2\2&(\3\2\2\2\' \3\2\2\2\'\"\3\2\2\2\'#\3\2\2\2"+
+		"(\61\3\2\2\2)*\f\7\2\2*+\t\2\2\2+\60\5\6\4\b,-\f\6\2\2-.\t\3\2\2.\60\5"+
+		"\6\4\7/)\3\2\2\2/,\3\2\2\2\60\63\3\2\2\2\61/\3\2\2\2\61\62\3\2\2\2\62"+
+		"\7\3\2\2\2\63\61\3\2\2\2\64\67\5\4\3\2\65\67\5\6\4\2\66\64\3\2\2\2\66"+
+		"\65\3\2\2\2\67\t\3\2\2\2\b\r\36\'/\61\66";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

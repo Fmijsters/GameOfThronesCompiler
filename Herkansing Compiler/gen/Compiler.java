@@ -3,6 +3,7 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * Compiles source code in a custom language into Jasmin and then assembles a
@@ -145,8 +146,7 @@ public class Compiler {
     private String generateCode(ParseTree parseTree) {
         StringWriter str = new StringWriter();
         PrintWriter out = new PrintWriter(str);
-        GameOfThronesVisitor visitor = new GameOfThronesVisitor();
-        visitor.visit(parseTree);
+
         // TODO: You will have to create a visitor that visits the parse tree and generates
         //       code for the nodes in that tree.
         //       In your case, you will probably want to supply that visitor with the PrintWriter
@@ -156,18 +156,20 @@ public class Compiler {
         out.println(".class public HelloWorld");
         out.println(".super java/lang/Object");
         out.println();
-
-        // Main method
+//
+//        // Main method
         out.println(".method public static main([Ljava/lang/String;)V");
-        out.println(".limit stack 2");
-        out.println(".limit locals 1");  // NOTE: The args-parameter is a local too
-        out.println();
+        out.println(".limit stack 10");
+        out.println(".limit locals 3");  // NOTE: The args-parameter is a local too
         out.println("  getstatic java/lang/System/out Ljava/io/PrintStream;");            // Push System.out
-        out.println("  ldc \"Hello World!\"");                                            // Push "Hello World!"
-        out.println("  invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");  // Call println()
+        GameOfThronesVisitor visitor = new GameOfThronesVisitor(out);
+        visitor.visit(parseTree);
+//        out.println();
+//        out.println("  ldc \"Hello World!\"");                                            // Push "Hello World!"
+//        out.println("  invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");  // Call println()
         out.println("  return");
         out.println(".end method");
-
+        System.out.println(str.toString());
         return str.toString();
     }
 

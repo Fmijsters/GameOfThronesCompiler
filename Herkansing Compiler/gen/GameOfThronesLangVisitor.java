@@ -1,4 +1,4 @@
-// Generated from C:/Users/fmijs/Desktop/Herkansing Compiler\GameOfThronesLang.g4 by ANTLR 4.7.2
+// Generated from C:/Users/fmijs/Desktop/GameOfThronesCompiler/Herkansing Compiler\GameOfThronesLang.g4 by ANTLR 4.7.2
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -22,6 +22,13 @@ public interface GameOfThronesLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPrintExpr(GameOfThronesLangParser.PrintExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code simple_expression}
+	 * labeled alternative in {@link GameOfThronesLangParser#something_for_the_maesters}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSimple_expression(GameOfThronesLangParser.Simple_expressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code assign}
 	 * labeled alternative in {@link GameOfThronesLangParser#something_for_the_maesters}.
