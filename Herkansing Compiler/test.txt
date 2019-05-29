@@ -1,0 +1,4 @@
+jonsnow = 1;
+danerys = 1;
+sansa = jonsnow - danerys;
+SPEAK sansa;
