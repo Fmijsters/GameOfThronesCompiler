@@ -30,18 +30,37 @@ public interface GameOfThronesLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssign(GameOfThronesLangParser.AssignContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code if}
+	 * Visit a parse tree produced by the {@code ifElse}
 	 * labeled alternative in {@link GameOfThronesLangParser#something_for_the_maesters}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIf(GameOfThronesLangParser.IfContext ctx);
+	T visitIfElse(GameOfThronesLangParser.IfElseContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code while}
+	 * labeled alternative in {@link GameOfThronesLangParser#something_for_the_maesters}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhile(GameOfThronesLangParser.WhileContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GameOfThronesLangParser#block}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitBlock(GameOfThronesLangParser.BlockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GameOfThronesLangParser#condition_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondition_statement(GameOfThronesLangParser.Condition_statementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GameOfThronesLangParser#condition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondition(GameOfThronesLangParser.ConditionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code identifier}
 	 * labeled alternative in {@link GameOfThronesLangParser#expr}.

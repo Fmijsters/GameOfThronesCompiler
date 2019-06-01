@@ -1,5 +1,4 @@
 import com.oracle.jrockit.jfr.DataType;
-import model.Scope;
 import model.VariableSymbol;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
@@ -10,16 +9,18 @@ import java.util.Map;
 
 public class GameOfThronesVisitor extends GameOfThronesLangBaseVisitor<ArrayList<String>> {
 
-    private Map<String, Integer> storage;
+    private Map<String, VariableSymbol> storage;
     private PrintWriter printWriter;
-    private Scope currentScope;
     private int counter = 0;
     private int labelCount = 0;
+    private int whileLabelCount = 0;
+    private ParseTreeProperty<VariableSymbol> symbols;
 
-    public GameOfThronesVisitor(PrintWriter printWriter, Scope scope) {
-        storage = new HashMap<String, Integer>();
-        this.currentScope = scope;
+
+    public GameOfThronesVisitor(PrintWriter printWriter, ParseTreeProperty symbols) {
+        storage = new HashMap<String, VariableSymbol>();
         this.printWriter = printWriter;
+        this.symbols = symbols;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class GameOfThronesVisitor extends GameOfThronesLangBaseVisitor<ArrayList
         ArrayList<String> code = new ArrayList<>();
         code.add("getstatic java/lang/System/out Ljava/io/PrintStream;");
         code.addAll(super.visit(ctx.expr()));
-        VariableSymbol symbol = currentScope.lookup(ctx);
+        VariableSymbol symbol = symbols.get(ctx);
         if (symbol.getType() == DataType.STRING) {
             code.add("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
         } else {
@@ -93,60 +94,111 @@ public class GameOfThronesVisitor extends GameOfThronesLangBaseVisitor<ArrayList
     public ArrayList<String> visitIdentifier(GameOfThronesLangParser.IdentifierContext ctx) {
         ArrayList<String> code = new ArrayList<>();
         String id = ctx.IDENTIFIER().getText();
-        VariableSymbol symbol = currentScope.lookup(ctx);
-        int memoryIndex = storage.get(id);
+        VariableSymbol symbol = storage.get(id);
+        int memoryIndex = storage.get(id).getStorageIndex();
         if (symbol.getType() == DataType.INTEGER) {
             code.add("iload " + memoryIndex);
         } else if (symbol.getType() == DataType.STRING) {
             code.add("aload " + memoryIndex);
         }
         return code;
-
     }
-
 
     @Override
     public ArrayList<String> visitAssign(GameOfThronesLangParser.AssignContext ctx) {
         ArrayList<String> code = new ArrayList<>();
         String id = ctx.IDENTIFIER().getText();
         int index = counter;
-        if (storage.get(id)!=null){
-            index = storage.get(id);
+        if (storage.get(id) != null) {
+            index = storage.get(id).getStorageIndex();
         }
         code.addAll(super.visit(ctx.expr()));
-        VariableSymbol symbol = currentScope.lookup(ctx);
+        VariableSymbol symbol = symbols.get(ctx);
+
         if (symbol.getType() == DataType.STRING) {
             code.add("astore " + index);
         } else {
             code.add("istore " + index);
         }
-        storage.put(id, index);
+
+        symbol.setStorageIndex(index);
+        storage.put(id, symbol);
         counter++;
 
         return code;
     }
 
     @Override
-    public ArrayList<String> visitIf(GameOfThronesLangParser.IfContext ctx) {
+    public ArrayList<String> visitCondition(GameOfThronesLangParser.ConditionContext ctx) {
         ArrayList<String> code = new ArrayList<>();
         code.addAll(visit(ctx.leftExpr));
         code.addAll(visit(ctx.rightExpr));
-        this.currentScope = currentScope.getChildScope();
-        String label = "endif_" + (labelCount++);
+        String label = "endif_" + (labelCount);
 
         if (ctx.LT() != null) {
-            code.add("if_icmpgt " + label);
+            if (ctx.NOT() != null) {
+                code.add("if_icmpgt  " + label);
+            } else
+                code.add("if_icmplt " + label);
         } else if (ctx.EQ() != null) {
-            code.add("if_icmpne " + label);
+            if (ctx.NOT() != null) {
+                code.add("if_icmpne  " + label);
+            } else
+                code.add("if_icmpeq " + label);
         } else if (ctx.NE() != null) {
-            code.add("if_icmpeq " + label);
+            if (ctx.NOT() != null) {
+                code.add("if_icmpeq  " + label);
+            } else
+                code.add("if_icmpne " + label);
         } else if (ctx.GT() != null) {
-            code.add("if_icmplt " + label);
+            if (ctx.NOT() != null) {
+                code.add("if_icmplt  " + label);
+            } else
+                code.add("if_icmpgt  " + label);
         }
-        code.addAll(super.visit(ctx.block()));
+        return code;
+    }
 
+    @Override
+    public ArrayList<String> visitIfElse(GameOfThronesLangParser.IfElseContext ctx) {
+        ArrayList<String> code = new ArrayList<>();
+        code.addAll(super.visit(ctx.condition_statement()));
+        String label = "endif_" + (labelCount);
+        String end = "endif_" + (labelCount++) + "end";
+        if (ctx.ELSE() != null) {
+            code.addAll(super.visit(ctx.block(1)));
+            code.add("goto " + end);
+        }
+        code.add("goto " + end);
         code.add(label + ":");
-        this.currentScope = currentScope.getParentScope();
+        code.addAll(super.visit(ctx.block(0)));
+        code.add(end + ":");
+        return code;
+    }
+
+    @Override
+    public ArrayList<String> visitWhile(GameOfThronesLangParser.WhileContext ctx) {
+        ArrayList<String> code = new ArrayList<>();
+        String whileLabel = "startWhile_" + (whileLabelCount++);
+        code.add(whileLabel + ":");
+        code.addAll(super.visit(ctx.condition_statement()));
+        String label = "endif_" + (labelCount);
+        String end = "endif_" + (labelCount++) + "end";
+        code.add("goto " + end);
+        code.add(label + ":");
+        code.addAll(super.visit(ctx.block()));
+        code.add("goto " + whileLabel);
+        code.add(end + ":");
+        return code;
+    }
+
+    @Override
+    public ArrayList<String> visitCondition_statement(GameOfThronesLangParser.Condition_statementContext ctx) {
+        ArrayList<String> code = new ArrayList<>();
+
+        for (GameOfThronesLangParser.ConditionContext c : ctx.condition()) {
+            code.addAll(super.visit(c));
+        }
         return code;
     }
 
@@ -165,48 +217,4 @@ public class GameOfThronesVisitor extends GameOfThronesLangBaseVisitor<ArrayList
         code.add("ldc " + ctx.STRING().getText());
         return code;
     }
-
-    //    @Override
-//    public Integer visitAssign(GameOfThronesLangParser.AssignContext ctx) {
-//        String id = ctx.IDENTIFIER().getText();  // id is left-hand side of '='
-//        int value = super.visit(ctx.expr());   // compute value of expression on right
-//        storage.put(id, value);           // store it in our memory
-//        return value;
-//    }
-//
-//    @Override
-//    public Integer visitInt(GameOfThronesLangParser.IntContext ctx) {
-//        return Integer.valueOf(ctx.INT().getText());
-//    }
-//
-//    @Override
-//    public Integer visitPrintExpr(GameOfThronesLangParser.PrintExprContext ctx) {
-//        Integer value = super.visit(ctx.expr()); // evaluate the expr child
-//        System.out.println(value);         // print the result
-//        return 0;
-//    }
-//
-//    @Override
-//    public Integer visitAddSub(GameOfThronesLangParser.AddSubContext ctx) {
-//        int left = super.visit(ctx.expr(0));  // get value of left subexpression
-//        int right = super.visit(ctx.expr(1)); // get value of right subexpression
-//        if (ctx.op.getType() == GameOfThronesLangParser.ADD) {
-//            return left + right;
-//        }
-//        return left - right; // must be SUB
-//    }
-//
-//    @Override
-//    public Integer visitParens(GameOfThronesLangParser.ParensContext ctx) {
-//        return super.visit(ctx.expr());
-//    }
-//
-//    @Override
-//    public Integer visitIdentifier(GameOfThronesLangParser.IdentifierContext ctx) {
-//        String id = ctx.IDENTIFIER().getText();
-//        if (storage.containsKey(id)) {
-//            return storage.get(id);
-//        }
-//        return 0;
-//    }
 }

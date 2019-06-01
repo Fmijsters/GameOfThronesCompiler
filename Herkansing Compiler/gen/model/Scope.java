@@ -22,8 +22,8 @@ public class Scope {
         return parentScope;
     }
 
-    private void setVars(Map<String, VariableSymbol> vars){
-        this.vars = vars;
+    private void addVars(Map<String, VariableSymbol> vars){
+        this.vars.putAll(vars);
     }
 
     public void declare(ParseTree parseTree, VariableSymbol symbol) {
@@ -52,7 +52,7 @@ public class Scope {
     public Scope createChildScope() {
         Scope scope = new Scope(symbols);
         scope.setParentScope(this);
-        scope.setVars(vars);
+        scope.addVars(vars);
         this.childScope = scope;
         return scope;
     }
