@@ -23,19 +23,25 @@ public interface GameOfThronesLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrintExpr(GameOfThronesLangParser.PrintExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code simple_expression}
-	 * labeled alternative in {@link GameOfThronesLangParser#something_for_the_maesters}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSimple_expression(GameOfThronesLangParser.Simple_expressionContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code assign}
 	 * labeled alternative in {@link GameOfThronesLangParser#something_for_the_maesters}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAssign(GameOfThronesLangParser.AssignContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code if}
+	 * labeled alternative in {@link GameOfThronesLangParser#something_for_the_maesters}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIf(GameOfThronesLangParser.IfContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GameOfThronesLangParser#block}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBlock(GameOfThronesLangParser.BlockContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code identifier}
 	 * labeled alternative in {@link GameOfThronesLangParser#expr}.
@@ -51,6 +57,13 @@ public interface GameOfThronesLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParens(GameOfThronesLangParser.ParensContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code string}
+	 * labeled alternative in {@link GameOfThronesLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitString(GameOfThronesLangParser.StringContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code MulDiv}
 	 * labeled alternative in {@link GameOfThronesLangParser#expr}.
 	 * @param ctx the parse tree
@@ -64,6 +77,13 @@ public interface GameOfThronesLangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAddSub(GameOfThronesLangParser.AddSubContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code comment}
+	 * labeled alternative in {@link GameOfThronesLangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComment(GameOfThronesLangParser.CommentContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code int}
 	 * labeled alternative in {@link GameOfThronesLangParser#expr}.
